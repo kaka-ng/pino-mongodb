@@ -27,7 +27,9 @@ export default async function (options: MongoDBTransportOption): Promise<Writabl
     objectMode: true,
     autoDestroy: true,
     write (chunk, _, callback) {
-      controller.insertOne(chunk, callback)
+      controller.insertOne(chunk)
+        .then(() => callback())
+        .catch((err) => callback(err))
     },
     destroy (error, callback) {
       client.close().finally(function () {})
